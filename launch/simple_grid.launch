@@ -1,0 +1,4 @@
+<launch>
+  <node name="PublishSimpleGridMap" pkg="mevius" type="PublishSimpleGridMap" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mevius2)/config/simple_grid.rviz" />
+</launch>
