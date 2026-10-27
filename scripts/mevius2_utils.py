@@ -117,7 +117,7 @@ def get_policy_output(policy, obs):
 
     clip_actions = normalization.clip_actions
     actions = torch.clip(actions, -clip_actions, clip_actions)
-    return actions.numpy()[0] # reference angle [rad]
+    return np.array(actions.detach().cpu().tolist()[0]) # reference angle [rad]
 
 def test_get_policy_output():
     policy_path = os.path.join(os.path.dirname(__file__), "../models/policy.pt")

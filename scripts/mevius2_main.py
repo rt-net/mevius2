@@ -128,9 +128,9 @@ class Mevius2:
     def ps4joy_joy_callback(self, msg):
         with self.peripheral_state.lock:
             self.peripheral_state.ps4joy_enable = True
-            self.peripheral_state.ps4joy = msg.axes[:] + msg.buttons[:] # 14 + 14
-            cross_pushed = self.peripheral_state.ps4joy[14+1]
-            circle_pushed = self.peripheral_state.ps4joy[14+2]
+            self.peripheral_state.ps4joy = msg.axes[:] + msg.buttons[:] # 8 + 8
+            cross_pushed = self.peripheral_state.ps4joy[8+0]
+            circle_pushed = self.peripheral_state.ps4joy[8+1]
 
         if cross_pushed == 1:
             self.command_callback("STANDBY-STANDUP")
@@ -246,7 +246,7 @@ class Mevius2:
                     if self.peripheral_state.ps4joy_enable:
                         nav = self.peripheral_state.ps4joy[:]
                         max_command = 1.0
-                        commands_ = [nav[1], nav[0], nav[2], nav[2]]
+                        commands_ = [nav[1], nav[0], nav[3], nav[3]]
                         commands = [[min(max(-1.0, command / max_command), 1.0) for command in commands_]]
                     elif self.peripheral_state.spacenav_enable:
                         nav = self.peripheral_state.spacenav[:]
@@ -272,7 +272,8 @@ class Mevius2:
                         print("IMU data is too old. PD gains become 0.")
                         is_safe = False
                 # falling down
-                if is_safe and (Rotation.from_quat(base_quat).as_matrix()[2, 2] < 0.6):
+                # if is_safe and (Rotation.from_quat(base_quat).as_matrix()[2, 2] < 0.6):
+                if is_safe and (Rotation.from_quat(base_quat).as_dcm()[2, 2] < 0.6):
                     is_safe = False
                     print("Robot is almost fell down. PD gains become 0.")
 
